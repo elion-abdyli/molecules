@@ -321,10 +321,11 @@
         'triamcinolone'
       ]; const [imageSrc, setImageSrc] = React.useState('');
       const [currentMolecule, setCurrentMolecule] = React.useState('');
-      const [showName, setShowName] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(true);
       const [preloadedImages, setPreloadedImages] = React.useState({});
       const [score, setScore] = React.useState({ correct: 0, incorrect: 0, total: 0 });
+      // Add a new state to track if the name is revealed
+      const [isNameRevealed, setIsNameRevealed] = React.useState(false);
       const preloadAllImages = async () => {
         try {
           const imagePromises = molecules.map(molecule => {
@@ -349,7 +350,7 @@
           const initial = molecules[Math.floor(Math.random() * molecules.length)];
           setCurrentMolecule(initial);
           setImageSrc(`molecules/${initial}.png`);
-          setShowName(false);
+          setIsNameRevealed(false);
           setIsLoading(false);
         } catch (error) {
           setIsLoading(false);
@@ -360,24 +361,33 @@
         const molecule = molecules[Math.floor(Math.random() * molecules.length)];
         setCurrentMolecule(molecule);
         setImageSrc(`molecules/${molecule}.png`);
-        setShowName(false);
-      };
-      const handleButton = () => {
-        if (isLoading) return;
-        // first or after showing name: load new image
-        if (currentMolecule === '' || showName) {
-          showNextMolecule();
-        } else {
-          // reveal the name
-          setShowName(true);
+        setIsNameRevealed(false);
+        // Directly hide the wrong answer button without using React state
+        const wrongBtn = document.querySelector('.wrong-button');
+        if (wrongBtn) {
+          wrongBtn.style.visibility = 'hidden';
         }
+      };
+      const showAnswer = () => {
+        setIsNameRevealed(true);
+        // Directly show the wrong answer button without using React state
+        const wrongBtn = document.querySelector('.wrong-button');
+        if (wrongBtn) {
+          wrongBtn.style.visibility = 'visible';
+        }
+      };
+      const handleWrongAnswer = () => {
+        showNextMolecule();
+      };
+      const handleCorrectAnswer = () => {
+        showNextMolecule();
       };
       React.useEffect(() => {
         preloadAllImages();
       }, []); return (
         <div className="app-container">          <h1 className="app-title">Molecule Viewer</h1>
           <p className="app-subtitle">Learn molecular structures through visual identification</p>          <div className="molecule-name" style={{
-            visibility: showName && !isLoading ? 'visible' : 'hidden'
+            visibility: isNameRevealed && !isLoading ? 'visible' : 'hidden'
           }}>
             {currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder'}
           </div>
@@ -392,19 +402,19 @@
               imageSrc && <img src={imageSrc} alt="Random Molecule" onLoad={() => { }} />
             )}
           </div>          <div className="controls">
-            <button onClick={handleButton} disabled={isLoading}>
+            <button
+              onClick={currentMolecule === '' || isNameRevealed ? showNextMolecule : showAnswer}
+              disabled={isLoading}
+            >
               {isLoading
                 ? 'Loading...'
-                : currentMolecule === '' || showName
+                : currentMolecule === '' || isNameRevealed
                   ? 'New Molecule'
                   : 'Reveal Name'}
             </button>
             <button
               className="wrong-button"
-              onClick={showNextMolecule}
-              style={{
-                visibility: showName && !isLoading ? 'visible' : 'hidden'
-              }}
+              onClick={handleWrongAnswer}
             >
               I Got It Wrong
             </button>
