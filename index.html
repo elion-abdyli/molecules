@@ -5,36 +5,56 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Random Molecule Viewer</title>
+  <!-- Add React CDN links -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel for JSX support -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <style>
     body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
-    #img-container{width:400px;height:400px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;margin-bottom:1em}
-    #img-container img{width:100%;height:100%;object-fit:contain;object-position:center}
+    .img-container{width:400px;height:400px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;margin-bottom:1em}
+    .img-container img{width:100%;height:100%;object-fit:contain;object-position:center}
     button{padding:.5em 1em;font-size:1em;cursor:pointer}
   </style>
 </head>
 <body>
-  <div id="img-container">
-    <img id="rand-img" alt="Random Molecule">
-  </div>
-  <button id="new-img">New Image</button>
+  <div id="root"></div>
   
-  <script>
-    // JavaScript for Random Molecule Image Viewer
-    const img = document.getElementById('rand-img');
-    // list of molecule image folders
-    const molecules = ['aldosterone','cholesterol','cortisol','cortisone','estradiol','progesterone','reference','testosterone'];
-
-    function load() {
-      // pick a random molecule
-      const folder = molecules[Math.floor(Math.random() * molecules.length)];
-      // set image source with cache-busting
-      img.src = `molecules/${folder}/image.png?cacheBust=${Date.now()}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('new-img').addEventListener('click', load);
-      load();
-    });
+  <script type="text/babel">
+    // React Component for Molecule Viewer
+    const MoleculeViewer = () => {
+      // List of molecule image folders
+      const molecules = ['aldosterone','cholesterol','cortisol','cortisone','estradiol','progesterone','reference','testosterone'];
+      
+      // State to track current image source
+      const [imageSrc, setImageSrc] = React.useState('');
+      
+      // Function to load a random molecule
+      const loadRandomMolecule = () => {
+        // Pick a random molecule
+        const folder = molecules[Math.floor(Math.random() * molecules.length)];
+        // Set image source with cache-busting
+        setImageSrc(`molecules/${folder}/image.png?cacheBust=${Date.now()}`);
+      };
+      
+      // Load a random molecule when component mounts
+      React.useEffect(() => {
+        loadRandomMolecule();
+      }, []);
+      
+      return (
+        <div>
+          <div className="img-container">
+            <img src={imageSrc} alt="Random Molecule" />
+          </div>
+          <button onClick={loadRandomMolecule}>New Image</button>
+        </div>
+      );
+    };
+    
+    // Render the React app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<MoleculeViewer />);
   </script>
 </body>
 </html>
