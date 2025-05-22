@@ -8,11 +8,14 @@
   <title>Random Molecule Viewer</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>  <style>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
+
     /* CSS Reset/Normalize */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
 
@@ -21,7 +24,8 @@
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
     }
 
@@ -31,20 +35,34 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    img, picture, video, canvas, svg {
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
       display: block;
       max-width: 100%;
     }
 
-    input, button, textarea, select {
+    input,
+    button,
+    textarea,
+    select {
       font: inherit;
     }
 
-    p, h1, h2, h3, h4, h5, h6 {
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       overflow-wrap: break-word;
     }
 
-    #root, #__next {
+    #root,
+    #__next {
       isolation: isolate;
     }
 
@@ -57,7 +75,8 @@
     }
 
     /* Remove default list styles */
-    ul, ol {
+    ul,
+    ol {
       list-style: none;
     }
 
@@ -164,8 +183,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .loading-text {
@@ -224,6 +248,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -313,16 +338,16 @@
       };
       React.useEffect(() => {
         preloadAllImages();
-      }, []);      return (
+      }, []); return (
         <div className="app-container">          <h1 className="app-title">Molecule Viewer</h1>
           <p className="app-subtitle">Learn molecular structures through visual identification</p>
-          
+
           <div className="molecule-name" style={{
             visibility: showName && !isLoading ? 'visible' : 'hidden'
           }}>
             {currentMolecule || 'placeholder'}
           </div>
-          
+
           <div className="img-container">
             {isLoading ? (
               <div>
@@ -333,14 +358,14 @@
               imageSrc && <img src={imageSrc} alt="Random Molecule" onLoad={() => { }} />
             )}
           </div>
-          
+
           <div className="controls">
             <button onClick={handleButton} disabled={isLoading}>
               {isLoading
                 ? 'Loading...'
                 : currentMolecule === '' || showName
-                ? 'New Molecule'
-                : 'Reveal Name'}
+                  ? 'New Molecule'
+                  : 'Reveal Name'}
             </button>
           </div>
         </div>
