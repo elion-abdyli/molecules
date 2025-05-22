@@ -390,11 +390,15 @@
                   ? 'New Molecule'
                   : 'Reveal Name'}
             </button>
-            {showName && !isLoading && (
-              <button className="wrong-button" onClick={() => console.log('Wrong answer recorded')}>
-                I Got It Wrong
-              </button>
-            )}
+            <button 
+              className="wrong-button" 
+              onClick={() => console.log('Wrong answer recorded')}
+              style={{
+                visibility: showName && !isLoading ? 'visible' : 'hidden'
+              }}
+            >
+              I Got It Wrong
+            </button>
           </div>
         </div>
       );
