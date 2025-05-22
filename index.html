@@ -28,13 +28,12 @@
       
       // State to track current image source
       const [imageSrc, setImageSrc] = React.useState('');
-      
-      // Function to load a random molecule
+        // Function to load a random molecule
       const loadRandomMolecule = () => {
         // Pick a random molecule
-        const folder = molecules[Math.floor(Math.random() * molecules.length)];
+        const molecule = molecules[Math.floor(Math.random() * molecules.length)];
         // Set image source with cache-busting
-        setImageSrc(`molecules/${folder}/image.png?cacheBust=${Date.now()}`);
+        setImageSrc(`molecules/${molecule}.png?cacheBust=${Date.now()}`);
       };
       
       // Load a random molecule when component mounts
