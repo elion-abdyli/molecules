@@ -196,9 +196,7 @@
       margin-top: 15px;
       color: #666;
       font-weight: 500;
-    }
-
-    button {
+    }    button {
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
@@ -212,6 +210,18 @@
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
       font-family: inherit;
+    }
+
+    .wrong-button {
+      background: linear-gradient(135deg, #f56565, #e53e3e);
+      box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+      font-size: 1em;
+      padding: 12px 24px;
+      margin-top: 10px;
+    }
+
+    .wrong-button:hover:not(:disabled) {
+      box-shadow: 0 8px 25px rgba(245, 101, 101, 0.4);
     }
 
     button:hover:not(:disabled) {
@@ -359,12 +369,10 @@
         preloadAllImages();
       }, []); return (
         <div className="app-container">          <h1 className="app-title">Molecule Viewer</h1>
-          <p className="app-subtitle">Learn molecular structures through visual identification</p>
-
-          <div className="molecule-name" style={{
+          <p className="app-subtitle">Learn molecular structures through visual identification</p>          <div className="molecule-name" style={{
             visibility: showName && !isLoading ? 'visible' : 'hidden'
           }}>
-            {currentMolecule || 'placeholder'}
+            {currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder'}
           </div>
 
           <div className="img-container">
@@ -376,9 +384,7 @@
             ) : (
               imageSrc && <img src={imageSrc} alt="Random Molecule" onLoad={() => { }} />
             )}
-          </div>
-
-          <div className="controls">
+          </div>          <div className="controls">
             <button onClick={handleButton} disabled={isLoading}>
               {isLoading
                 ? 'Loading...'
@@ -386,6 +392,11 @@
                   ? 'New Molecule'
                   : 'Reveal Name'}
             </button>
+            {showName && !isLoading && (
+              <button className="wrong-button" onClick={() => console.log('Wrong answer recorded')}>
+                I Got It Wrong
+              </button>
+            )}
           </div>
         </div>
       );
