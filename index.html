@@ -11,9 +11,68 @@
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>  <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    * {
+    /* CSS Reset/Normalize */
+    *, *::before, *::after {
       box-sizing: border-box;
     }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img, picture, video, canvas, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    input, button, textarea, select {
+      font: inherit;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      overflow-wrap: break-word;
+    }
+
+    #root, #__next {
+      isolation: isolate;
+    }
+
+    /* Remove default button styles */
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* Remove default list styles */
+    ul, ol {
+      list-style: none;
+    }
+
+    /* Remove default link styles */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Ensure images are responsive by default */
+    img {
+      height: auto;
+    }
+
+    /* Custom styles start here */
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -255,13 +314,14 @@
       React.useEffect(() => {
         preloadAllImages();
       }, []);      return (
-        <div className="app-container">
-          <h1 className="app-title">Molecule Viewer</h1>
+        <div className="app-container">          <h1 className="app-title">Molecule Viewer</h1>
           <p className="app-subtitle">Learn molecular structures through visual identification</p>
           
-          {showName && !isLoading && (
-            <div className="molecule-name">{currentMolecule}</div>
-          )}
+          <div className="molecule-name" style={{
+            visibility: showName && !isLoading ? 'visible' : 'hidden'
+          }}>
+            {currentMolecule || 'placeholder'}
+          </div>
           
           <div className="img-container">
             {isLoading ? (
