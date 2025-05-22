@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Random Lorem Picsum</title>
+  <title>Random Molecule Viewer</title>
   <style>
     body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
     #img-container{width:400px;height:400px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;margin-bottom:1em}
@@ -14,8 +14,27 @@
 </head>
 <body>
   <div id="img-container">
-    <img id="rand-img" alt="Random Picsum">
+    <img id="rand-img" alt="Random Molecule">
   </div>
-  <button id="new-img">New Image</button>  <script src="script.js"></script>
+  <button id="new-img">New Image</button>
+  
+  <script>
+    // JavaScript for Random Molecule Image Viewer
+    const img = document.getElementById('rand-img');
+    // list of molecule image folders
+    const molecules = ['aldosterone','cholesterol','cortisol','cortisone','estradiol','progesterone','reference','testosterone'];
+
+    function load() {
+      // pick a random molecule
+      const folder = molecules[Math.floor(Math.random() * molecules.length)];
+      // set image source with cache-busting
+      img.src = `molecules/${folder}/image.png?cacheBust=${Date.now()}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('new-img').addEventListener('click', load);
+      load();
+    });
+  </script>
 </body>
 </html>
