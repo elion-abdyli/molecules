@@ -355,14 +355,18 @@
           setIsLoading(false);
         }
       };
+      const showNextMolecule = () => {
+        if (isLoading) return;
+        const molecule = molecules[Math.floor(Math.random() * molecules.length)];
+        setCurrentMolecule(molecule);
+        setImageSrc(`molecules/${molecule}.png`);
+        setShowName(false);
+      };
       const handleButton = () => {
         if (isLoading) return;
         // first or after showing name: load new image
         if (currentMolecule === '' || showName) {
-          const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-          setCurrentMolecule(molecule);
-          setImageSrc(`molecules/${molecule}.png`);
-          setShowName(false);
+          showNextMolecule();
         } else {
           // reveal the name
           setShowName(true);
@@ -397,15 +401,7 @@
             </button>
             <button
               className="wrong-button"
-              onClick={() => {
-                if (!isLoading) {
-                  // console.log('Wrong answer recorded');
-                  const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-                  setCurrentMolecule(molecule);
-                  setImageSrc(`molecules/${molecule}.png`);
-                  setShowName(false);
-                }
-              }}
+              onClick={showNextMolecule}
               style={{
                 visibility: showName && !isLoading ? 'visible' : 'hidden'
               }}
