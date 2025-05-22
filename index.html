@@ -285,9 +285,28 @@
 
 <body>
   <div id="root"></div>
-  <script type="text/babel">
-    const MoleculeViewer = () => {
-      const molecules = ['aldosterone', 'cholesterol', 'cortisol', 'cortisone', 'estradiol', 'progesterone', 'reference', 'testosterone'];
+  <script type="text/babel">    const MoleculeViewer = () => {      const molecules = [
+        'acetonide-triamcinolone', 
+        'aldosterone', 
+        'amcinonide', 
+        'betamethasone', 
+        'cholesterol', 
+        'cortisol (different screenshot)', 
+        'cortisol', 
+        'cortisone', 
+        'desonide', 
+        'dexamethasone', 
+        'dipropionate-betamethasone', 
+        'estradiol', 
+        'fludrocortisone', 
+        'furoate-momethasone', 
+        'prednisolone', 
+        'progesterone', 
+        'reference', 
+        'testosterone', 
+        'triamcinolone (different screenshot)', 
+        'triamcinolone'
+      ];
       const [imageSrc, setImageSrc] = React.useState('');
       const [currentMolecule, setCurrentMolecule] = React.useState('');
       const [showName, setShowName] = React.useState(false);
