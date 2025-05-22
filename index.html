@@ -46,6 +46,12 @@
       opacity: 0.5;
       cursor: not-allowed
     }
+
+    .molecule-name {
+      margin-top: 1em;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -55,6 +61,8 @@
     const MoleculeViewer = () => {
       const molecules = ['aldosterone', 'cholesterol', 'cortisol', 'cortisone', 'estradiol', 'progesterone', 'reference', 'testosterone'];
       const [imageSrc, setImageSrc] = React.useState('');
+      const [currentMolecule, setCurrentMolecule] = React.useState('');
+      const [showName, setShowName] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(true);
       const [preloadedImages, setPreloadedImages] = React.useState({});
       const preloadAllImages = async () => {
@@ -77,38 +85,50 @@
             imagesMap[item.name] = item.image;
           });
           setPreloadedImages(imagesMap);
-          const randomMolecule = molecules[Math.floor(Math.random() * molecules.length)];
-          setImageSrc(`molecules/${randomMolecule}.png`);
+          // load an initial random molecule after preload
+          const initial = molecules[Math.floor(Math.random() * molecules.length)];
+          setCurrentMolecule(initial);
+          setImageSrc(`molecules/${initial}.png`);
+          setShowName(false);
           setIsLoading(false);
         } catch (error) {
           setIsLoading(false);
         }
       };
-      const loadRandomMolecule = () => {
-        if (Object.keys(preloadedImages).length === 0) {
-          return;
+      const handleButton = () => {
+        if (isLoading) return;
+        // first or after showing name: load new image
+        if (currentMolecule === '' || showName) {
+          const molecule = molecules[Math.floor(Math.random() * molecules.length)];
+          setCurrentMolecule(molecule);
+          setImageSrc(`molecules/${molecule}.png`);
+          setShowName(false);
+        } else {
+          // reveal the name
+          setShowName(true);
         }
-        const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-        setImageSrc(`molecules/${molecule}.png`);
       };
       React.useEffect(() => {
         preloadAllImages();
       }, []);
       return (
         <div>
+          {showName && !isLoading && (
+            <div className="molecule-name">{currentMolecule}</div>
+          )}
           <div className="img-container">
             {isLoading ? (
               <div>Loading images...</div>
             ) : (
-              <img
-                src={imageSrc}
-                alt="Random Molecule"
-                onLoad={() => { }}
-              />
+              imageSrc && <img src={imageSrc} alt="Random Molecule" onLoad={() => { }} />
             )}
           </div>
-          <button onClick={loadRandomMolecule} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'New Image'}
+          <button onClick={handleButton} disabled={isLoading}>
+            {isLoading
+              ? 'Loading...'
+              : currentMolecule === '' || showName
+              ? 'New Image'
+              : 'Reveal Name'}
           </button>
         </div>
       );
