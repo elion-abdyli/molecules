@@ -392,7 +392,15 @@
             </button>
             <button 
               className="wrong-button" 
-              onClick={() => console.log('Wrong answer recorded')}
+              onClick={() => {
+                if (!isLoading) {
+                  // console.log('Wrong answer recorded');
+                  const molecule = molecules[Math.floor(Math.random() * molecules.length)];
+                  setCurrentMolecule(molecule);
+                  setImageSrc(`molecules/${molecule}.png`);
+                  setShowName(false);
+                }
+              }}
               style={{
                 visibility: showName && !isLoading ? 'visible' : 'hidden'
               }}
