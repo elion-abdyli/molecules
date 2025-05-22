@@ -6,9 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Random Molecule Viewer</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -214,12 +212,25 @@
       font-family: inherit;
     }
 
+    .correct-button {
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+      font-size: 1em;
+      padding: 12px 24px;
+      /* Inherits common button styles like color, border-radius, etc. */
+    }
+
+    .correct-button:hover:not(:disabled) {
+      box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+      /* transform is inherited from button:hover:not(:disabled) */
+    }
+
     .wrong-button {
       background: linear-gradient(135deg, #a0aec0, #718096);
       box-shadow: 0 4px 15px rgba(160, 174, 192, 0.3);
       font-size: 1em;
       padding: 12px 24px;
-      margin-top: 10px;
+      /* margin-top: 10px; Removed, gap in .controls handles spacing */
     }
 
     .wrong-button:hover:not(:disabled) {
@@ -243,7 +254,7 @@
     }
 
     .molecule-name {
-      margin-bottom: 20px;
+      /* margin-bottom: 20px; */ /* Moved to wrapper */
       font-size: 1.8em;
       font-weight: 600;
       color: #2d3748;
@@ -253,6 +264,14 @@
       background-clip: text;
       text-transform: capitalize;
       animation: fadeInUp 0.5s ease;
+    }
+
+    .molecule-name-wrapper { /* New style */
+      min-height: 2.7em; /* 1.8em (font-size of .molecule-name) * 1.5 (line-height) */
+      margin-bottom: 20px; /* Original margin from .molecule-name */
+      display: flex; /* Optional: to center content if needed, works with text-align:center on child */
+      align-items: center; /* Optional: vertical centering */
+      justify-content: center; /* Optional: horizontal centering if child is not block */
     }
 
     @keyframes fadeInUp {
@@ -272,6 +291,7 @@
       flex-direction: column;
       align-items: center;
       gap: 15px;
+      min-height: 111px; /* Calculated to fit two smaller buttons and gap */
     }
 
     @media (max-width: 480px) {
@@ -292,138 +312,167 @@
         font-size: 1.5em;
       }
     }
+
+    /* Style for the "I Got It Wrong" button when hidden via ng-show */
+    /* .ng-hide {
+      display: none !important;
+    } */
   </style>
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="text/babel">    const MoleculeViewer = () => {
-      const molecules = [
-        'acetonide-triamcinolone',
-        'aldosterone',
-        'amcinonide',
-        'betamethasone',
-        'cholesterol',
-        'cortisol (different screenshot)',
-        'cortisol',
-        'cortisone',
-        'desonide',
-        'dexamethasone',
-        'dipropionate-betamethasone',
-        'estradiol',
-        'fludrocortisone',
-        'furoate-momethasone',
-        'prednisolone',
-        'progesterone',
-        'reference',
-        'testosterone',
-        'triamcinolone (different screenshot)',
-        'triamcinolone'
-      ]; const [imageSrc, setImageSrc] = React.useState('');
-      const [currentMolecule, setCurrentMolecule] = React.useState('');
-      const [isLoading, setIsLoading] = React.useState(true);
-      const [preloadedImages, setPreloadedImages] = React.useState({});
-      const [score, setScore] = React.useState({ correct: 0, incorrect: 0, total: 0 });
-      // Add a new state to track if the name is revealed
-      const [isNameRevealed, setIsNameRevealed] = React.useState(false);
-      const preloadAllImages = async () => {
-        try {
-          const imagePromises = molecules.map(molecule => {
-            return new Promise((resolve, reject) => {
-              const img = new Image();
-              img.onload = () => {
-                resolve({ name: molecule, image: img });
-              };
-              img.onerror = (err) => {
-                reject(err);
-              };
-              img.src = `molecules/${molecule}.png`;
-            });
-          });
-          const loadedImages = await Promise.all(imagePromises);
-          const imagesMap = {};
-          loadedImages.forEach(item => {
-            imagesMap[item.name] = item.image;
-          });
-          setPreloadedImages(imagesMap);
-          // load an initial random molecule after preload
-          const initial = molecules[Math.floor(Math.random() * molecules.length)];
-          setCurrentMolecule(initial);
-          setImageSrc(`molecules/${initial}.png`);
-          setIsNameRevealed(false);
-          setIsLoading(false);
-        } catch (error) {
-          setIsLoading(false);
-        }
-      };
-      const showNextMolecule = () => {
-        if (isLoading) return;
-        const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-        setCurrentMolecule(molecule);
-        setImageSrc(`molecules/${molecule}.png`);
-        setIsNameRevealed(false);
-        // Directly hide the wrong answer button without using React state
-        const wrongBtn = document.querySelector('.wrong-button');
-        if (wrongBtn) {
-          wrongBtn.style.visibility = 'hidden';
-        }
-      };
-      const showAnswer = () => {
-        setIsNameRevealed(true);
-        // Directly show the wrong answer button without using React state
-        const wrongBtn = document.querySelector('.wrong-button');
-        if (wrongBtn) {
-          wrongBtn.style.visibility = 'visible';
-        }
-      };
-      const handleWrongAnswer = () => {
-        showNextMolecule();
-      };
-      const handleCorrectAnswer = () => {
-        showNextMolecule();
-      };
-      React.useEffect(() => {
-        preloadAllImages();
-      }, []); return (
-        <div className="app-container">          <h1 className="app-title">Molecule Viewer</h1>
-          <p className="app-subtitle">Learn molecular structures through visual identification</p>          <div className="molecule-name" style={{
-            visibility: isNameRevealed && !isLoading ? 'visible' : 'hidden'
-          }}>
-            {currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder'}
-          </div>
-
-          <div className="img-container">
-            {isLoading ? (
-              <div>
-                <div className="loading-spinner"></div>
-                <div className="loading-text">Loading images...</div>
-              </div>
-            ) : (
-              imageSrc && <img src={imageSrc} alt="Random Molecule" onLoad={() => { }} />
-            )}
-          </div>          <div className="controls">
-            <button
-              onClick={currentMolecule === '' || isNameRevealed ? showNextMolecule : showAnswer}
-              disabled={isLoading}
-            >
-              {isLoading
-                ? 'Loading...'
-                : currentMolecule === '' || isNameRevealed
-                  ? 'New Molecule'
-                  : 'Reveal Name'}
-            </button>
-            <button
-              className="wrong-button"
-              onClick={handleWrongAnswer}
-            >
-              I Got It Wrong
-            </button>
-          </div>
+  <div id="root">
+    <div class="app-container">
+      <h1 class="app-title">Molecule Viewer</h1>
+      <p class="app-subtitle">Learn molecular structures through visual identification</p>
+      <div class="molecule-name-wrapper"> <!-- Added wrapper -->
+        <div id="moleculeName" class="molecule-name" style="display: none;">
+          <!-- Molecule name will be inserted here -->
         </div>
-      );
-    };
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<MoleculeViewer />);
+      </div>
+
+      <div class="img-container">
+        <div id="loadingSpinnerContainer">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Loading images...</div>
+        </div>
+        <img id="moleculeImage" src="" alt="Random Molecule" style="display: none;" />
+      </div>
+
+      <div class="controls">
+        <button id="revealButton">
+          <!-- Button text will be set here -->
+        </button>
+        <button id="correctButton" class="correct-button" style="display: none;">
+          I Got It Right
+        </button>
+        <button id="wrongButton" class="wrong-button" style="display: none;">
+          I Got It Wrong
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () { // Document ready
+      let molecules = [
+        'acetonide-triamcinolone', 'aldosterone', 'amcinonide', 'betamethasone',
+        'cholesterol', 'cortisol (different screenshot)', 'cortisol', 'cortisone',
+        'desonide', 'dexamethasone', 'dipropionate-betamethasone', 'estradiol',
+        'fludrocortisone', 'furoate-momethasone', 'prednisolone', 'progesterone',
+        'reference', 'testosterone', 'triamcinolone (different screenshot)', 'triamcinolone'
+      ];
+      let currentMolecule = '';
+      let isLoading = true;
+      let isNameRevealed = false;
+
+      const $moleculeNameDisplay = $('#moleculeName');
+      const $moleculeImage = $('#moleculeImage');
+      const $loadingSpinnerContainer = $('#loadingSpinnerContainer');
+      const $revealButton = $('#revealButton');
+      const $correctButton = $('#correctButton');
+      const $wrongButton = $('#wrongButton');
+
+      function getCurrentMoleculeName() {
+        return currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder';
+      }
+
+      function getMainButtonText() {
+        if (isLoading) return 'Loading...';
+        return 'Reveal Name';
+      }
+
+      function updateUI() {
+        $revealButton.text(getMainButtonText());
+
+        if (isLoading) {
+          $loadingSpinnerContainer.show();
+          $moleculeImage.hide();
+          $moleculeNameDisplay.hide();
+          $revealButton.prop('disabled', true).show();
+          $correctButton.hide();
+          $wrongButton.hide();
+        } else { // Not loading
+          $loadingSpinnerContainer.hide();
+
+          if (currentMolecule === 'No molecules available') {
+            $moleculeImage.hide();
+            $moleculeNameDisplay.text(currentMolecule).show();
+            $revealButton.hide();
+            $correctButton.hide();
+            $wrongButton.hide();
+          } else { // Molecules are available and loaded
+            $moleculeImage.show();
+            if (isNameRevealed) {
+              $moleculeNameDisplay.text(getCurrentMoleculeName()).show();
+              $revealButton.hide();
+              $correctButton.show().prop('disabled', false);
+              $wrongButton.show().prop('disabled', false);
+            } else {
+              $moleculeNameDisplay.hide();
+              $revealButton.show().prop('disabled', false);
+              $correctButton.hide();
+              $wrongButton.hide();
+            }
+          }
+        }
+      }
+
+      function showNextMolecule() {
+        if (molecules.length === 0 && !isLoading) {
+          currentMolecule = 'No molecules available';
+          isNameRevealed = true; // To show the message via moleculeNameDisplay
+        } else if (molecules.length > 0) {
+          const molecule = molecules[Math.floor(Math.random() * molecules.length)];
+          currentMolecule = molecule;
+          $moleculeImage.attr('src', `molecules/${molecule}.png`);
+          isNameRevealed = false;
+        }
+        updateUI();
+      }
+
+      function preloadAllImages() {
+        isLoading = true;
+        updateUI(); // Show initial loading state
+
+        if (molecules.length === 0) {
+          isLoading = false;
+          showNextMolecule(); // Handles "No molecules" message and UI update
+          return;
+        }
+
+        let loadedCount = 0;
+        molecules.forEach(molecule => {
+          const img = new Image();
+          img.onload = img.onerror = () => {
+            loadedCount++;
+            if (loadedCount === molecules.length) {
+              isLoading = false;
+              showNextMolecule(); // Load initial molecule and update UI
+            }
+          };
+          img.src = `molecules/${molecule}.png`;
+        });
+      }
+
+      // Event Handlers
+      $revealButton.on('click', function () {
+        if (isLoading || currentMolecule === 'No molecules available') return;
+        isNameRevealed = true;
+        updateUI();
+      });
+
+      $correctButton.on('click', function () {
+        showNextMolecule();
+      });
+
+      $wrongButton.on('click', function () {
+        showNextMolecule();
+      });
+
+      // Initial load
+      preloadAllImages();
+    });
   </script>
 </body>
 
