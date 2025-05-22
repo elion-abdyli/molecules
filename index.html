@@ -21,11 +21,9 @@
   <div id="root"></div>
     <script type="text/babel">    // React Component for Molecule Viewer
     const MoleculeViewer = () => {
-      console.log('Component initialization - start');
       
       // List of molecule image names
       const molecules = ['aldosterone','cholesterol','cortisol','cortisone','estradiol','progesterone','reference','testosterone'];
-      console.log('Available molecules:', molecules);
       
       // State to track current image source
       const [imageSrc, setImageSrc] = React.useState('');
@@ -34,54 +32,37 @@
       // State to store preloaded images
       const [preloadedImages, setPreloadedImages] = React.useState({});
       
-      console.log('Component initialization - states initialized');
         // Function to preload all images
       const preloadAllImages = async () => {
-        console.log('preloadAllImages - started');
         try {
-          console.log('Creating image load promises for each molecule');
           const imagePromises = molecules.map(molecule => {
             return new Promise((resolve, reject) => {
               const img = new Image();
               img.onload = () => {
-                console.log(`Image loaded: ${molecule}`);
                 resolve({ name: molecule, image: img });
               };
               img.onerror = (err) => {
-                console.error(`Failed to load image: ${molecule}`, err);
                 reject(err);
               };
               img.src = `molecules/${molecule}.png`;
-              console.log(`Loading started for: ${molecule}`);
             });
           });
           
-          console.log('Waiting for all images to load with Promise.all()');
           const loadedImages = await Promise.all(imagePromises);
-          console.log('All images loaded successfully:', loadedImages);
           
-          console.log('Creating image map object');
           const imagesMap = {};
           loadedImages.forEach(item => {
             imagesMap[item.name] = item.image;
           });
           
-          console.log('Image map created:', imagesMap);
-          console.log('Sample image object structure:', imagesMap[molecules[0]]);
-          
           setPreloadedImages(imagesMap);
           
           // Select a random molecule immediately after loading
           const randomMolecule = molecules[Math.floor(Math.random() * molecules.length)];
-          console.log('Initial random molecule selected:', randomMolecule);
-          
           setImageSrc(`molecules/${randomMolecule}.png`);
-          console.log('Image source set to:', `molecules/${randomMolecule}.png`);
           
           setIsLoading(false);
-          console.log('Loading state set to false - preloading complete');
         } catch (error) {
-          console.error('Error preloading images:', error);
           setIsLoading(false);
         }
       };
@@ -90,27 +71,19 @@
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~loadRandomMolecule - started');
         
         if (Object.keys(preloadedImages).length === 0) {
-          console.log('No preloaded images available, returning early');
           return;
         }
         
         // Pick a random molecule
         const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-        console.log('New random molecule selected:', molecule);
         
         // Set image source from preloaded images
         setImageSrc(`molecules/${molecule}.png`);
-        console.log('Image source updated to:', `molecules/${molecule}.png`);
-        
-        // Log the actual Image object from our preloaded cache
-        console.log('Corresponding preloaded Image object:', preloadedImages[molecule]);
       };
           // Preload all images when component mounts
       React.useEffect(() => {
-        console.log('useEffect triggered - component mounted');
         preloadAllImages();
         return () => {
-          console.log('Component unmounting - cleanup');
         };
       }, []);        return (
         <div>
@@ -121,7 +94,7 @@
               <img 
                 src={imageSrc} 
                 alt="Random Molecule"
-                onLoad={() => console.log('Image rendered in DOM')} 
+                onLoad={() => {}} 
               />
             )}
           </div>
@@ -132,10 +105,8 @@
       );
     };
       // Render the React app
-    console.log('Starting app - before rendering');
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<MoleculeViewer />);
-    console.log('App rendered to DOM');
   </script>
 </body>
 </html>
