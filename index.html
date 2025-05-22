@@ -196,7 +196,9 @@
       margin-top: 15px;
       color: #666;
       font-weight: 500;
-    }    button {
+    }
+
+    button {
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
@@ -210,7 +212,9 @@
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
       font-family: inherit;
-    }    .wrong-button {
+    }
+
+    .wrong-button {
       background: linear-gradient(135deg, #a0aec0, #718096);
       box-shadow: 0 4px 15px rgba(160, 174, 192, 0.3);
       font-size: 1em;
@@ -293,28 +297,29 @@
 
 <body>
   <div id="root"></div>
-  <script type="text/babel">    const MoleculeViewer = () => {      const molecules = [
-        'acetonide-triamcinolone', 
-        'aldosterone', 
-        'amcinonide', 
-        'betamethasone', 
-        'cholesterol', 
-        'cortisol (different screenshot)', 
-        'cortisol', 
-        'cortisone', 
-        'desonide', 
-        'dexamethasone', 
-        'dipropionate-betamethasone', 
-        'estradiol', 
-        'fludrocortisone', 
-        'furoate-momethasone', 
-        'prednisolone', 
-        'progesterone', 
-        'reference', 
-        'testosterone', 
-        'triamcinolone (different screenshot)', 
+  <script type="text/babel">    const MoleculeViewer = () => {
+      const molecules = [
+        'acetonide-triamcinolone',
+        'aldosterone',
+        'amcinonide',
+        'betamethasone',
+        'cholesterol',
+        'cortisol (different screenshot)',
+        'cortisol',
+        'cortisone',
+        'desonide',
+        'dexamethasone',
+        'dipropionate-betamethasone',
+        'estradiol',
+        'fludrocortisone',
+        'furoate-momethasone',
+        'prednisolone',
+        'progesterone',
+        'reference',
+        'testosterone',
+        'triamcinolone (different screenshot)',
         'triamcinolone'
-      ];      const [imageSrc, setImageSrc] = React.useState('');
+      ]; const [imageSrc, setImageSrc] = React.useState('');
       const [currentMolecule, setCurrentMolecule] = React.useState('');
       const [showName, setShowName] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(true);
@@ -390,8 +395,8 @@
                   ? 'New Molecule'
                   : 'Reveal Name'}
             </button>
-            <button 
-              className="wrong-button" 
+            <button
+              className="wrong-button"
               onClick={() => {
                 if (!isLoading) {
                   // console.log('Wrong answer recorded');
