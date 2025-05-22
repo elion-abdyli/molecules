@@ -5,10 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Random Molecule Viewer</title>
-  <!-- Add React CDN links -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel for JSX support -->
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>  <style>
     body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}
     .img-container{width:400px;height:400px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;margin-bottom:1em}
@@ -19,20 +17,12 @@
 </head>
 <body>
   <div id="root"></div>
-    <script type="text/babel">    // React Component for Molecule Viewer
+    <script type="text/babel">
     const MoleculeViewer = () => {
-      
-      // List of molecule image names
       const molecules = ['aldosterone','cholesterol','cortisol','cortisone','estradiol','progesterone','reference','testosterone'];
-      
-      // State to track current image source
       const [imageSrc, setImageSrc] = React.useState('');
-      // State to track loading status
       const [isLoading, setIsLoading] = React.useState(true);
-      // State to store preloaded images
       const [preloadedImages, setPreloadedImages] = React.useState({});
-      
-        // Function to preload all images
       const preloadAllImages = async () => {
         try {
           const imagePromises = molecules.map(molecule => {
@@ -47,45 +37,30 @@
               img.src = `molecules/${molecule}.png`;
             });
           });
-          
           const loadedImages = await Promise.all(imagePromises);
-          
           const imagesMap = {};
           loadedImages.forEach(item => {
             imagesMap[item.name] = item.image;
           });
-          
           setPreloadedImages(imagesMap);
-          
-          // Select a random molecule immediately after loading
           const randomMolecule = molecules[Math.floor(Math.random() * molecules.length)];
           setImageSrc(`molecules/${randomMolecule}.png`);
-          
           setIsLoading(false);
         } catch (error) {
           setIsLoading(false);
         }
       };
-          // Function to load a random molecule
       const loadRandomMolecule = () => {
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~loadRandomMolecule - started');
-        
         if (Object.keys(preloadedImages).length === 0) {
           return;
         }
-        
-        // Pick a random molecule
         const molecule = molecules[Math.floor(Math.random() * molecules.length)];
-        
-        // Set image source from preloaded images
         setImageSrc(`molecules/${molecule}.png`);
       };
-          // Preload all images when component mounts
       React.useEffect(() => {
         preloadAllImages();
-        return () => {
-        };
-      }, []);        return (
+      }, []);
+      return (
         <div>
           <div className="img-container">
             {isLoading ? (
@@ -104,7 +79,6 @@
         </div>
       );
     };
-      // Render the React app
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<MoleculeViewer />);
   </script>
