@@ -16,19 +16,6 @@
   <div id="img-container">
     <img id="rand-img" alt="Random Picsum">
   </div>
-  <button id="new-img">New Image</button>
-  <script>
-    const img = document.getElementById('rand-img');
-    // list of molecule image folders
-    const molecules = ['aldosterone','cholesterol','cortisol','estradiol','progesterone','reference','testosterone'];
-    function load() {
-      // pick a random molecule
-      const folder = molecules[Math.floor(Math.random() * molecules.length)];
-      // set image source with cache-busting
-      img.src = `molecules/${folder}/image.png?cacheBust=${Date.now()}`;
-    }
-    document.getElementById('new-img').addEventListener('click', load);
-    load();
-  </script>
+  <button id="new-img">New Image</button>  <script src="script.js"></script>
 </body>
 </html>
