@@ -314,12 +314,12 @@
         'testosterone', 
         'triamcinolone (different screenshot)', 
         'triamcinolone'
-      ];
-      const [imageSrc, setImageSrc] = React.useState('');
+      ];      const [imageSrc, setImageSrc] = React.useState('');
       const [currentMolecule, setCurrentMolecule] = React.useState('');
       const [showName, setShowName] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(true);
       const [preloadedImages, setPreloadedImages] = React.useState({});
+      const [score, setScore] = React.useState({ correct: 0, incorrect: 0, total: 0 });
       const preloadAllImages = async () => {
         try {
           const imagePromises = molecules.map(molecule => {
