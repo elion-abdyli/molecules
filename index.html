@@ -114,6 +114,7 @@
       max-width: 500px;
       width: 100%;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
     }
 
     .app-container:hover {
@@ -196,6 +197,33 @@
       font-weight: 500;
     }
 
+    .settings-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      color: #888;
+      border: none;
+      padding: 5px 10px;
+      font-size: 1.8em;
+      font-weight: normal;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      z-index: 10;
+      text-transform: none;
+      letter-spacing: normal;
+      box-shadow: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .settings-button:hover {
+      color: #555;
+      background-color: rgba(0, 0, 0, 0.05);
+      transform: none;
+      box-shadow: none;
+    }
+
     button {
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
@@ -212,22 +240,20 @@
       font-family: inherit;
     }
 
-    .feedback-button { /* New common class for Correct/Incorrect buttons */
+    .feedback-button {
       font-size: 1.1em;
       padding: 14px 24px;
-      width: 160px; /* Or a suitable width to ensure they are the same size */
+      width: 160px;
       text-align: center;
     }
 
     .correct-button {
       background: linear-gradient(135deg, #48bb78, #38a169);
       box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-      /* Inherits common button styles like color, border-radius, etc. */
     }
 
     .correct-button:hover:not(:disabled) {
       box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
-      /* transform is inherited from button:hover:not(:disabled) */
     }
 
     .wrong-button {
@@ -267,12 +293,12 @@
       animation: fadeInUp 0.5s ease;
     }
 
-    .molecule-name-wrapper { /* New style */
-      min-height: 2.7em; /* 1.8em (font-size of .molecule-name) * 1.5 (line-height) */
-      margin-bottom: 20px; /* Original margin from .molecule-name */
-      display: flex; /* Optional: to center content if needed, works with text-align:center on child */
-      align-items: center; /* Optional: vertical centering */
-      justify-content: center; /* Optional: horizontal centering if child is not block */
+    .molecule-name-wrapper {
+      min-height: 2.7em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @keyframes fadeInUp {
@@ -292,7 +318,7 @@
       flex-direction: column;
       align-items: center;
       gap: 15px;
-      min-height: 125px; /* Calculated to fit two smaller buttons and gap */
+      min-height: 125px;
     }
 
     @media (max-width: 480px) {
@@ -318,9 +344,10 @@
 <body>
   <div id="root">
     <div class="app-container">
+      <button id="settingsButton" class="settings-button">⚙️</button>
       <h1 class="app-title">Molecule Viewer</h1>
       <p class="app-subtitle">Learn molecular structures through visual identification</p>
-      <div class="molecule-name-wrapper"> <!-- Added wrapper -->
+      <div class="molecule-name-wrapper">
         <div id="moleculeName" class="molecule-name" style="display: none;">
           <!-- Molecule name will be inserted here -->
         </div>
@@ -335,7 +362,7 @@
       </div>
 
       <div class="controls">
-        <button id="revealButton" class="feedback-button"> <!-- Added feedback-button class -->
+        <button id="revealButton" class="feedback-button">
           <!-- Button text will be set here -->
         </button>
         <button id="correctButton" class="correct-button feedback-button" style="display: none;">
@@ -367,6 +394,8 @@
       const $revealButton = $('#revealButton');
       const $correctBtn = $('#correctButton');
       const $incorrectBtn = $('#wrongButton');
+      const $settingsButton = $('#settingsButton'); // Added settings button
+      let settingsOpen = false; // Added state for settings button
 
       function getCurrentMoleculeName() {
         return currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder';
@@ -463,6 +492,17 @@
 
       $incorrectBtn.on('click', function () {
         showNextMolecule();
+      });
+
+      $settingsButton.on('click', function() { // Added event listener for settings button
+        settingsOpen = !settingsOpen;
+        if (settingsOpen) {
+          $(this).text('✖');
+          // Add logic to show settings panel or perform other actions
+        } else {
+          $(this).text('⚙️');
+          // Add logic to hide settings panel or perform other actions
+        }
       });
 
       // Initial load
