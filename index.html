@@ -222,8 +222,6 @@
     .correct-button {
       background: linear-gradient(135deg, #48bb78, #38a169);
       box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-      /* font-size: 1em; Removed, handled by .feedback-button */
-      /* padding: 12px 24px; Removed, handled by .feedback-button */
       /* Inherits common button styles like color, border-radius, etc. */
     }
 
@@ -235,9 +233,6 @@
     .wrong-button {
       background: linear-gradient(135deg, #a0aec0, #718096);
       box-shadow: 0 4px 15px rgba(160, 174, 192, 0.3);
-      /* font-size: 1em; Removed, handled by .feedback-button */
-      /* padding: 12px 24px; Removed, handled by .feedback-button */
-      /* margin-top: 10px; Removed, gap in .controls handles spacing */
     }
 
     .wrong-button:hover:not(:disabled) {
@@ -261,7 +256,6 @@
     }
 
     .molecule-name {
-      /* margin-bottom: 20px; */ /* Moved to wrapper */
       font-size: 1.8em;
       font-weight: 600;
       color: #2d3748;
@@ -304,7 +298,6 @@
     @media (max-width: 480px) {
       .app-container {
         padding: 30px 20px;
-        margin: 10px;
       }
 
       .app-title {
@@ -319,11 +312,6 @@
         font-size: 1.5em;
       }
     }
-
-    /* Style for the "I Got It Wrong" button when hidden via ng-show */
-    /* .ng-hide {
-      display: none !important;
-    } */
   </style>
 </head>
 
