@@ -10,10 +10,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    /* CSS Reset/Normalize */
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
@@ -22,8 +19,7 @@
       padding: 0;
     }
 
-    html,
-    body {
+    html, body {
       height: 100%;
     }
 
@@ -33,38 +29,23 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    img,
-    picture,
-    video,
-    canvas,
-    svg {
+    img, picture, video, canvas, svg {
       display: block;
       max-width: 100%;
     }
 
-    input,
-    button,
-    textarea,
-    select {
+    input, button, textarea, select {
       font: inherit;
     }
 
-    p,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    p, h1, h2, h3, h4, h5, h6 {
       overflow-wrap: break-word;
     }
 
-    #root,
-    #__next {
+    #root, #__next {
       isolation: isolate;
     }
 
-    /* Remove default button styles */
     button {
       background: none;
       border: none;
@@ -72,32 +53,22 @@
       cursor: pointer;
     }
 
-    /* Remove default list styles */
-    ul,
-    ol {
+    ul, ol {
       list-style: none;
     }
 
-    /* Remove default link styles */
     a {
       text-decoration: none;
       color: inherit;
     }
 
-    /* Ensure images are responsive by default */
     img {
       height: auto;
     }
 
     #settingsPanel {
-      /* Approximate content height of mainContent's children */
-      /* This ensures app-container doesn't shrink drastically when settings are open. */
-      /* Calculation based on:
-         ~70px (titles) + ~63px (name wrapper) + 430px (img container + margin) + 125px (controls) = ~688px
-         Let's use a slightly rounded value.
-      */
+      /* Approximate content height for mainContent's children to prevent drastic shrinking. */
       min-height: 680px;
-      /* Added for settings content layout */
       display: flex;
       flex-direction: column;
     }
@@ -105,7 +76,6 @@
     .settings-content {
       flex-grow: 1;
       overflow-y: auto;
-      /* Allows scrolling if content exceeds height */
       padding-top: 20px;
       text-align: left;
       color: #333;
@@ -124,8 +94,7 @@
       margin-right: 15px;
     }
 
-    .settings-group input[type="text"],
-    .settings-group select {
+    .settings-group input[type="text"], .settings-group select {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #cbd5e0;
@@ -134,32 +103,20 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .settings-group input[type="text"]:focus,
-    .settings-group select:focus {
+    .settings-group input[type="text"]:focus, .settings-group select:focus {
       outline: none;
       border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
 
     .settings-group input[type="checkbox"] {
-      /* This style might not be needed if all checkboxes are part of toggle switches */
-      /* opacity: 0;
-      width: 0;
-      height: 0; */
-      /* Keeping for now in case of standalone checkboxes, but toggle CSS handles its own input */
+      /* Styles for toggle switch input are handled by .toggle-switch input */
     }
 
     .settings-group .checkbox-label {
-      /* This class is now more generic for the text part of a setting row */
-      /* display: inline-flex; */
-      /* Handled by flex on settings-group */
-      /* align-items: center; */
-      /* Handled by flex on settings-group */
       font-weight: normal;
-      /* Overridden by .settings-group label:first-child for boldness */
       color: #4a5568;
       cursor: default;
-      /* Text label isn't directly clickable for the toggle */
     }
 
     /* Toggle Switch Styles */
@@ -167,9 +124,7 @@
       position: relative;
       display: inline-block;
       width: 50px;
-      /* Width of the toggle switch */
       height: 28px;
-      /* Height of the toggle switch */
     }
 
     .toggle-switch input {
@@ -188,16 +143,13 @@
       background-color: #ccc;
       transition: .4s;
       border-radius: 28px;
-      /* Should be equal to height */
     }
 
     .toggle-slider:before {
       position: absolute;
       content: "";
       height: 20px;
-      /* Height of the thumb */
       width: 20px;
-      /* Width of the thumb */
       left: 4px;
       bottom: 4px;
       background-color: white;
@@ -215,12 +167,10 @@
 
     input:checked+.toggle-slider:before {
       transform: translateX(22px);
-      /* (Switch Width - Thumb Width - 2*Thumb Padding) */
     }
 
     /* End Toggle Switch Styles */
 
-    /* Custom styles start here */
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -345,7 +295,6 @@
       text-transform: none;
       letter-spacing: normal;
       box-shadow: none;
-      font-family: 'Inter', sans-serif;
     }
 
     .settings-button:hover {
@@ -368,7 +317,6 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-      font-family: inherit;
     }
 
     .feedback-button {
@@ -482,7 +430,6 @@
         <p class="app-subtitle">Learn molecular structures through visual identification</p>
         <div class="molecule-name-wrapper">
           <div id="moleculeName" class="molecule-name" style="display: none;">
-            <!-- Molecule name will be inserted here -->
           </div>
         </div>
 
@@ -496,7 +443,6 @@
 
         <div class="controls">
           <button id="revealButton" class="feedback-button">
-            <!-- Button text will be set here -->
           </button>
           <button id="correctButton" class="correct-button feedback-button" style="display: none;">
             Correct
@@ -598,7 +544,7 @@
   </div>
 
   <script>
-    $(function () { // Document ready
+    $(function () {
       let molecules = [
         'acetonide-triamcinolone', 'aldosterone', 'amcinonide', 'betamethasone',
         'cholesterol', 'cortisol (different screenshot)', 'cortisol', 'cortisone',
@@ -616,18 +562,18 @@
       const $revealButton = $('#revealButton');
       const $correctBtn = $('#correctButton');
       const $incorrectBtn = $('#wrongButton');
-      const $settingsButton = $('#settingsButton'); // Added settings button
+      const $settingsButton = $('#settingsButton');
       const $mainContent = $('#mainContent');
       const $settingsPanel = $('#settingsPanel');
-      let settingsOpen = false; // Added state for settings button
+      let settingsOpen = false;
 
       function getCurrentMoleculeName() {
-        return currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder';
+        return currentMolecule.split(' ')[0];
       }
 
       function getMainButtonText() {
         if (isLoading) return 'Loading...';
-        return 'Show'; // Changed from 'Reveal Name'
+        return 'Show';
       }
 
       function updateUI() {
@@ -669,7 +615,7 @@
       function showNextMolecule() {
         if (molecules.length === 0 && !isLoading) {
           currentMolecule = 'No molecules available';
-          isNameRevealed = true; // To show the message via moleculeNameDisplay
+          isNameRevealed = true; // To show the message
         } else if (molecules.length > 0) {
           const molecule = molecules[Math.floor(Math.random() * molecules.length)];
           currentMolecule = molecule;
@@ -681,11 +627,11 @@
 
       function preloadAllImages() {
         isLoading = true;
-        updateUI(); // Show initial loading state
+        updateUI();
 
         if (molecules.length === 0) {
           isLoading = false;
-          showNextMolecule(); // Handles "No molecules" message and UI update
+          showNextMolecule();
           return;
         }
 
@@ -696,7 +642,7 @@
             loadedCount++;
             if (loadedCount === molecules.length) {
               isLoading = false;
-              showNextMolecule(); // Load initial molecule and update UI
+              showNextMolecule();
             }
           };
           img.src = `molecules/${molecule}.png`;
@@ -720,18 +666,11 @@
 
       $settingsButton.on('click', function () {
         settingsOpen = !settingsOpen;
-        if (settingsOpen) {
-          $(this).text('✖');
-          $mainContent.hide();
-          $settingsPanel.show();
-        } else {
-          $(this).text('⚙️');
-          $settingsPanel.hide();
-          $mainContent.show();
-        }
+        $(this).text(settingsOpen ? '✖' : '⚙️');
+        $mainContent.toggle(!settingsOpen);
+        $settingsPanel.toggle(settingsOpen);
       });
 
-      // Initial load
       preloadAllImages();
     });
   </script>
