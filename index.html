@@ -212,11 +212,18 @@
       font-family: inherit;
     }
 
+    .feedback-button { /* New common class for Correct/Incorrect buttons */
+      font-size: 1.1em;
+      padding: 14px 24px;
+      width: 160px; /* Or a suitable width to ensure they are the same size */
+      text-align: center;
+    }
+
     .correct-button {
       background: linear-gradient(135deg, #48bb78, #38a169);
       box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-      font-size: 1em;
-      padding: 12px 24px;
+      /* font-size: 1em; Removed, handled by .feedback-button */
+      /* padding: 12px 24px; Removed, handled by .feedback-button */
       /* Inherits common button styles like color, border-radius, etc. */
     }
 
@@ -228,8 +235,8 @@
     .wrong-button {
       background: linear-gradient(135deg, #a0aec0, #718096);
       box-shadow: 0 4px 15px rgba(160, 174, 192, 0.3);
-      font-size: 1em;
-      padding: 12px 24px;
+      /* font-size: 1em; Removed, handled by .feedback-button */
+      /* padding: 12px 24px; Removed, handled by .feedback-button */
       /* margin-top: 10px; Removed, gap in .controls handles spacing */
     }
 
@@ -291,7 +298,7 @@
       flex-direction: column;
       align-items: center;
       gap: 15px;
-      min-height: 111px; /* Calculated to fit two smaller buttons and gap */
+      min-height: 125px; /* Calculated to fit two smaller buttons and gap */
     }
 
     @media (max-width: 480px) {
@@ -340,14 +347,14 @@
       </div>
 
       <div class="controls">
-        <button id="revealButton">
+        <button id="revealButton" class="feedback-button"> <!-- Added feedback-button class -->
           <!-- Button text will be set here -->
         </button>
-        <button id="correctButton" class="correct-button" style="display: none;">
-          I Got It Right
+        <button id="correctButton" class="correct-button feedback-button" style="display: none;">
+          Correct
         </button>
-        <button id="wrongButton" class="wrong-button" style="display: none;">
-          I Got It Wrong
+        <button id="wrongButton" class="wrong-button feedback-button" style="display: none;">
+          Incorrect
         </button>
       </div>
     </div>
@@ -370,8 +377,8 @@
       const $moleculeImage = $('#moleculeImage');
       const $loadingSpinnerContainer = $('#loadingSpinnerContainer');
       const $revealButton = $('#revealButton');
-      const $correctButton = $('#correctButton');
-      const $wrongButton = $('#wrongButton');
+      const $correctBtn = $('#correctButton');
+      const $incorrectBtn = $('#wrongButton');
 
       function getCurrentMoleculeName() {
         return currentMolecule ? currentMolecule.split(' ')[0] : 'placeholder';
@@ -379,7 +386,7 @@
 
       function getMainButtonText() {
         if (isLoading) return 'Loading...';
-        return 'Reveal Name';
+        return 'Show'; // Changed from 'Reveal Name'
       }
 
       function updateUI() {
@@ -390,8 +397,8 @@
           $moleculeImage.hide();
           $moleculeNameDisplay.hide();
           $revealButton.prop('disabled', true).show();
-          $correctButton.hide();
-          $wrongButton.hide();
+          $correctBtn.hide();
+          $incorrectBtn.hide();
         } else { // Not loading
           $loadingSpinnerContainer.hide();
 
@@ -399,20 +406,20 @@
             $moleculeImage.hide();
             $moleculeNameDisplay.text(currentMolecule).show();
             $revealButton.hide();
-            $correctButton.hide();
-            $wrongButton.hide();
+            $correctBtn.hide();
+            $incorrectBtn.hide();
           } else { // Molecules are available and loaded
             $moleculeImage.show();
             if (isNameRevealed) {
               $moleculeNameDisplay.text(getCurrentMoleculeName()).show();
               $revealButton.hide();
-              $correctButton.show().prop('disabled', false);
-              $wrongButton.show().prop('disabled', false);
+              $correctBtn.show().prop('disabled', false);
+              $incorrectBtn.show().prop('disabled', false);
             } else {
               $moleculeNameDisplay.hide();
               $revealButton.show().prop('disabled', false);
-              $correctButton.hide();
-              $wrongButton.hide();
+              $correctBtn.hide();
+              $incorrectBtn.hide();
             }
           }
         }
@@ -462,11 +469,11 @@
         updateUI();
       });
 
-      $correctButton.on('click', function () {
+      $correctBtn.on('click', function () {
         showNextMolecule();
       });
 
-      $wrongButton.on('click', function () {
+      $incorrectBtn.on('click', function () {
         showNextMolecule();
       });
 
