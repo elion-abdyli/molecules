@@ -89,6 +89,134 @@
       height: auto;
     }
 
+    #settingsPanel {
+      /* Approximate content height of mainContent's children */
+      /* This ensures app-container doesn't shrink drastically when settings are open. */
+      /* Calculation based on:
+         ~70px (titles) + ~63px (name wrapper) + 430px (img container + margin) + 125px (controls) = ~688px
+         Let's use a slightly rounded value.
+      */
+      min-height: 680px;
+      /* Added for settings content layout */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .settings-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      /* Allows scrolling if content exceeds height */
+      padding-top: 20px;
+      text-align: left;
+      color: #333;
+    }
+
+    .settings-group {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-group label:first-child {
+      font-weight: 600;
+      color: #4a5568;
+      margin-right: 15px;
+    }
+
+    .settings-group input[type="text"],
+    .settings-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 0.95em;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .settings-group input[type="text"]:focus,
+    .settings-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .settings-group input[type="checkbox"] {
+      /* This style might not be needed if all checkboxes are part of toggle switches */
+      /* opacity: 0;
+      width: 0;
+      height: 0; */
+      /* Keeping for now in case of standalone checkboxes, but toggle CSS handles its own input */
+    }
+
+    .settings-group .checkbox-label {
+      /* This class is now more generic for the text part of a setting row */
+      /* display: inline-flex; */ /* Handled by flex on settings-group */
+      /* align-items: center; */ /* Handled by flex on settings-group */
+      font-weight: normal;
+      /* Overridden by .settings-group label:first-child for boldness */
+      color: #4a5568;
+      cursor: default;
+      /* Text label isn't directly clickable for the toggle */
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      /* Width of the toggle switch */
+      height: 28px;
+      /* Height of the toggle switch */
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 28px;
+      /* Should be equal to height */
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      /* Height of the thumb */
+      width: 20px;
+      /* Width of the thumb */
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #667eea;
+    }
+
+    input:focus + .toggle-slider {
+      box-shadow: 0 0 1px #667eea;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+      /* (Switch Width - Thumb Width - 2*Thumb Padding) */
+    }
+    /* End Toggle Switch Styles */
+
     /* Custom styles start here */
 
     body {
@@ -345,32 +473,123 @@
   <div id="root">
     <div class="app-container">
       <button id="settingsButton" class="settings-button">⚙️</button>
-      <h1 class="app-title">Molecule Viewer</h1>
-      <p class="app-subtitle">Learn molecular structures through visual identification</p>
-      <div class="molecule-name-wrapper">
-        <div id="moleculeName" class="molecule-name" style="display: none;">
-          <!-- Molecule name will be inserted here -->
+
+      <div id="mainContent">
+        <h1 class="app-title">Molecule Viewer</h1>
+        <p class="app-subtitle">Learn molecular structures through visual identification</p>
+        <div class="molecule-name-wrapper">
+          <div id="moleculeName" class="molecule-name" style="display: none;">
+            <!-- Molecule name will be inserted here -->
+          </div>
+        </div>
+
+        <div class="img-container">
+          <div id="loadingSpinnerContainer">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading images...</div>
+          </div>
+          <img id="moleculeImage" src="" alt="Random Molecule" style="display: none;" />
+        </div>
+
+        <div class="controls">
+          <button id="revealButton" class="feedback-button">
+            <!-- Button text will be set here -->
+          </button>
+          <button id="correctButton" class="correct-button feedback-button" style="display: none;">
+            Correct
+          </button>
+          <button id="wrongButton" class="wrong-button feedback-button" style="display: none;">
+            Incorrect
+          </button>
         </div>
       </div>
 
-      <div class="img-container">
-        <div id="loadingSpinnerContainer">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">Loading images...</div>
-        </div>
-        <img id="moleculeImage" src="" alt="Random Molecule" style="display: none;" />
-      </div>
+      <div id="settingsPanel" style="display: none;">
+        <h1 class="app-title">Settings</h1>
+        <p class="app-subtitle">Adjust application settings</p>
+        <div class="settings-content">
 
-      <div class="controls">
-        <button id="revealButton" class="feedback-button">
-          <!-- Button text will be set here -->
-        </button>
-        <button id="correctButton" class="correct-button feedback-button" style="display: none;">
-          Correct
-        </button>
-        <button id="wrongButton" class="wrong-button feedback-button" style="display: none;">
-          Incorrect
-        </button>
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingEnableHints">Enable Hints</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingEnableHints" name="enableHints" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingDarkMode">Dark Mode</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingDarkMode" name="darkMode">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingSoundEffects">Sound Effects</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingSoundEffects" name="soundEffects" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingNotifications">Email Notifications</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingNotifications" name="notifications">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingAutoSave">Auto-Save Progress</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingAutoSave" name="autoSave" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingHighContrast">High Contrast Mode</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingHighContrast" name="highContrast">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingAnalytics">Share Usage Data</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingAnalytics" name="analytics" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingTooltips">Show Tooltips</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingTooltips" name="tooltips" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingBetaFeatures">Enable Beta Features</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingBetaFeatures" name="betaFeatures">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-group">
+            <label class="checkbox-label" for="settingOfflineMode">Offline Mode</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingOfflineMode" name="offlineMode">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -395,6 +614,8 @@
       const $correctBtn = $('#correctButton');
       const $incorrectBtn = $('#wrongButton');
       const $settingsButton = $('#settingsButton'); // Added settings button
+      const $mainContent = $('#mainContent');
+      const $settingsPanel = $('#settingsPanel');
       let settingsOpen = false; // Added state for settings button
 
       function getCurrentMoleculeName() {
@@ -494,14 +715,16 @@
         showNextMolecule();
       });
 
-      $settingsButton.on('click', function() { // Added event listener for settings button
+      $settingsButton.on('click', function() { 
         settingsOpen = !settingsOpen;
         if (settingsOpen) {
           $(this).text('✖');
-          // Add logic to show settings panel or perform other actions
+          $mainContent.hide();
+          $settingsPanel.show();
         } else {
           $(this).text('⚙️');
-          // Add logic to hide settings panel or perform other actions
+          $settingsPanel.hide();
+          $mainContent.show();
         }
       });
 
