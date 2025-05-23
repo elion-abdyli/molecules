@@ -151,8 +151,10 @@
 
     .settings-group .checkbox-label {
       /* This class is now more generic for the text part of a setting row */
-      /* display: inline-flex; */ /* Handled by flex on settings-group */
-      /* align-items: center; */ /* Handled by flex on settings-group */
+      /* display: inline-flex; */
+      /* Handled by flex on settings-group */
+      /* align-items: center; */
+      /* Handled by flex on settings-group */
       font-weight: normal;
       /* Overridden by .settings-group label:first-child for boldness */
       color: #4a5568;
@@ -203,18 +205,19 @@
       border-radius: 50%;
     }
 
-    input:checked + .toggle-slider {
+    input:checked+.toggle-slider {
       background-color: #667eea;
     }
 
-    input:focus + .toggle-slider {
+    input:focus+.toggle-slider {
       box-shadow: 0 0 1px #667eea;
     }
 
-    input:checked + .toggle-slider:before {
+    input:checked+.toggle-slider:before {
       transform: translateX(22px);
       /* (Switch Width - Thumb Width - 2*Thumb Padding) */
     }
+
     /* End Toggle Switch Styles */
 
     /* Custom styles start here */
@@ -715,7 +718,7 @@
         showNextMolecule();
       });
 
-      $settingsButton.on('click', function() { 
+      $settingsButton.on('click', function () {
         settingsOpen = !settingsOpen;
         if (settingsOpen) {
           $(this).text('✖');
